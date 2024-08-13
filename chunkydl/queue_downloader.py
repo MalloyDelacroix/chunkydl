@@ -52,10 +52,8 @@ class QueueDownloader(Runner):
         while self.continue_run:
             dl_group = self._queue.get()
             if dl_group is not None:
-                print(f'Submitted: {dl_group.url}')
                 self.executor.submit(self.download_group, dl_group=dl_group)
             else:
-                print('Stopping download queue')
                 break
         self.executor.shutdown(wait=True)
 
