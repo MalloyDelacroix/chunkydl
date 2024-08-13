@@ -4,7 +4,12 @@ class DownloadConfig:
     """
     Mainly a data class that stores values used for configuring the exact behavior of a download session such as the
     multipart size threshold, multiple download thread count, and additional configuration options.
+
+    Attributes:
+        default_headers (dict): Dictionary of default headers to be included in all requests.
     """
+
+    default_headers = {'Accept': '*/*'}
 
     def __init__(self, **kwargs):
         """
@@ -38,9 +43,8 @@ class DownloadConfig:
         self.timeout = kwargs.get('timeout', 10)
         self.retries = kwargs.get('retries', 3)
         self.chunk_size = kwargs.get('chunk_size', 1024 * 1024)
-        self.default_headers = {'Accept': '*/*'}
-        self.additional_headers = kwargs.get('add_headers', None)
-        self.complete_headers = kwargs.get('headers', None)
+        self._additional_headers = kwargs.get('additional_headers', None)
+        self._complete_headers = kwargs.get('headers', None)
         self.verify_ssl = kwargs.get('verify_ssl', True)
         self.size_threshold = kwargs.get('size_threshold', 1024 * 1024 * 100)
         self.file_download_thread_count = kwargs.get('file_download_thread_count', 4)
@@ -56,13 +60,17 @@ class DownloadConfig:
         Returns:
             The headers as configured by the kwargs supplied to the class initializer.
         """
-        if self.complete_headers is not None:
-            return self.complete_headers
+        if self._complete_headers is not None:
+            return self._complete_headers
         headers = self.default_headers.copy()
-        if self.additional_headers is not None:
-            for key, value in self.additional_headers.items():
+        if self._additional_headers is not None:
+            for key, value in self._additional_headers.items():
                 headers[key] = value
         return headers
+
+    @headers.setter
+    def headers(self, headers: dict):
+        self._complete_headers = headers
 
     def get_headers(self, **kwargs) -> dict:
         """
