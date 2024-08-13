@@ -1,7 +1,6 @@
 import os
 import unittest
-from unittest.mock import patch, MagicMock
-import requests
+from unittest.mock import patch, MagicMock, mock_open
 
 from chunkydl.utils import get_output, get_name_from_url, _download_actual
 from chunkydl.exceptions import RequestFailedException
@@ -84,7 +83,8 @@ class TestGetNameFromURL(unittest.TestCase):
 class TestDownloadActual(unittest.TestCase):
 
     @patch('requests.get')
-    def test_successful_download(self, mock_get):
+    @patch('builtins.open', new_callable=mock_open)
+    def test_successful_download(self, mock_file, mock_get):
         """
         Tests that the download function calls the requests library with the correct information, and returns the
         correct value.
@@ -102,6 +102,7 @@ class TestDownloadActual(unittest.TestCase):
         result = _download_actual(url, output_path, timeout, headers, chunk_size, verify_ssl)
         mock_get.assert_called_with(url, stream=True, timeout=timeout, headers=headers, verify=verify_ssl)
         self.assertTrue(result)
+        mock_file.assert_called()
 
     @patch('requests.get')
     def test_non_200_206_status_code(self, mock_get):
@@ -123,3 +124,16 @@ class TestDownloadActual(unittest.TestCase):
 
         self.assertEqual(context.exception.status_code, 404)
         self.assertEqual(context.exception.url, url)
+
+    def test_empty_url(self, ):
+        output_path = "output.txt"
+        timeout = 10
+        headers = {}
+        chunk_size = 1024
+        verify_ssl = False
+
+        with self.assertRaises(ValueError):
+            _download_actual('', output_path, timeout, headers, chunk_size, verify_ssl)
+
+        with self.assertRaises(ValueError):
+            _download_actual(None, output_path, timeout, headers, chunk_size, verify_ssl)
