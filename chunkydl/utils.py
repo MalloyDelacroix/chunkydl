@@ -7,7 +7,6 @@ from .exceptions import RequestFailedException
 from .config import DownloadConfig
 
 
-# DLGroup = namedtuple('DLGroup', ['url', 'output_path', 'config'])
 class DLGroup(NamedTuple):
     """
     A NamedTuple representing data that will be used for downloading a file and specifying its output path and
