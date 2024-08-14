@@ -2,11 +2,11 @@ from typing import Union
 
 from .config import DownloadConfig
 from .download import _download
-from .utils import DLGroup
+from .utils import DLGroup, Response
 from .queue_downloader import QueueDownloader
 
 
-def download(url: str, output_path: str, **kwargs):
+def download(url: str, output_path: str, **kwargs) -> Response:
     """
     Downloads a file from the url to the output_path using the configuration variables that are supplied.
 
@@ -39,10 +39,10 @@ def download(url: str, output_path: str, **kwargs):
                 downloader will be deleted if some part of the multipart download fails.  Default is False.
     """
     config = DownloadConfig(**kwargs)
-    _download(url, output_path, config)
+    return _download(url, output_path, config)
 
 
-def download_list(urls: list[Union[str, DLGroup]], output_dir: str, **kwargs):
+def download_list(urls: list[Union[str, DLGroup]], output_dir: str, **kwargs) -> list[Response]:
     """
     Downloads a list of urls to the specified output directory using the configuration variables that are supplied.
     Multiple files will be downloaded simultaneously depending on the supplied configuration variables.
@@ -88,3 +88,4 @@ def download_list(urls: list[Union[str, DLGroup]], output_dir: str, **kwargs):
             downloader.add(url)
     downloader.add(None)
     downloader.run()
+    return downloader.results
