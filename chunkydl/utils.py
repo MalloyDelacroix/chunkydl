@@ -1,6 +1,7 @@
 import os
 from urllib.parse import urlparse
-from typing import NamedTuple
+from typing import NamedTuple, Dict
+from datetime import timedelta
 import requests
 
 from .exceptions import RequestFailedException
@@ -21,6 +22,25 @@ class DLGroup(NamedTuple):
     url: str
     output_path: str
     config: DownloadConfig
+
+
+class Response(NamedTuple):
+
+    """
+    A NamedTuple that holds data as returned from a request.  The main content of the original response is not kept, but
+    attributes that may be of use to the user are stored here and returned in a convenience wrapper.
+
+    Attributes:
+        url (str): The URL that the request was made to.
+        headers (Dict[str, str]): The headers returned by the original response.
+        status_code (int): The HTTP status code of the original response.
+        elapsed (timedelta): The elapsed time between sending the request and receiving the original response.
+    """
+
+    url: str
+    headers: Dict[str, str]
+    status_code: int
+    elapsed: timedelta
 
 
 def get_output(output_path: str) -> tuple:
@@ -59,7 +79,7 @@ def get_name_from_url(url: str) -> str:
 
 def _download_actual(
     url: str, output_path: str, timeout: int, headers: dict, chunk_size: int, verify_ssl: bool = False, **kwargs
-) -> bool:
+) -> requests.Response:
     """
     Download a file from a given URL and save it to the specified output path.
 
@@ -73,7 +93,8 @@ def _download_actual(
         **kwargs: Additional keyword arguments to pass to the requests.get function.
 
     Returns:
-        bool: True if the download is successful, False otherwise.
+        Response: A response object containing useful information from the response returned by the get request made in
+        this method.
     """
     response = requests.get(url, stream=True, timeout=timeout, headers=headers, verify=verify_ssl, **kwargs)
     if response.status_code != 200 and response.status_code != 206:
@@ -82,4 +103,23 @@ def _download_actual(
         for chunk in response.iter_content(chunk_size=chunk_size):
             if chunk:
                 f.write(chunk)
-    return True
+    return make_response(response)
+
+
+def make_response(response: requests.Response) -> Response:
+    """
+    Takes a requests.Response object and extracts the pertinent information from it, returning it as a Response object.
+
+    Args:
+        response (requests.Response): A requests.Response object as returned from a request.
+
+    Returns:
+        Response: A Response object containing pertinent information from the supplied requests.Response.
+    """
+    headers = dict(response.headers)
+    return Response(
+        url=response.url,
+        headers=headers,
+        status_code=response.status_code,
+        elapsed=response.elapsed,
+    )
