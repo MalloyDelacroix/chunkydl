@@ -1,3 +1,4 @@
+import logging
 import os
 import unittest
 from unittest.mock import patch, Mock, mock_open
@@ -83,6 +84,10 @@ class TestRun(unittest.TestCase):
 
 
 class TestJoinFile(unittest.TestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        logging.disable(logging.CRITICAL)
 
     @patch('chunkydl.multi_part_downloader.MultiPartDownloader.remove_temp_path')
     @patch('chunkydl.multi_part_downloader.ThreadPoolExecutor')
