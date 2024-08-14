@@ -127,6 +127,8 @@ class MultiPartDownloader(Runner):
         """
         if self.temp_path is None:
             self.temp_path = tempfile.mkdtemp(dir=os.path.dirname(self.output_path))
+        if self.output_name is None or self.output_name == '':
+            self.output_name = os.path.basename(self.url)
         return os.path.join(self.temp_path, f'{self.output_name}.part-{part}')
 
     def remove_temp_path(self) -> None:
