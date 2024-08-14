@@ -1,5 +1,9 @@
+import logging
 from abc import ABC
 from threading import Thread, Event
+
+
+logger = logging.getLogger(__name__)
 
 
 def verify_run(method):
@@ -31,6 +35,7 @@ class Runner(ABC, Thread):
         Sets the stop_run flag to true.
         """
         self._stop_run.set()
+        logger.info(f'Stopping {self.__class__.__name__}')
 
     @property
     def continue_run(self) -> bool:

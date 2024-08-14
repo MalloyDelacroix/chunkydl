@@ -1,9 +1,13 @@
+import logging
 from queue import Queue
 from concurrent.futures import ThreadPoolExecutor
 
 from .config import DownloadConfig
 from .runner import Runner, verify_run
 from .download import _download
+
+
+logger = logging.getLogger(__name__)
 
 
 class QueueDownloader(Runner):
@@ -27,6 +31,7 @@ class QueueDownloader(Runner):
         self.config = config
         self._queue = Queue(maxsize=-1)
         self.executor = ThreadPoolExecutor(config.file_download_thread_count)
+        self.config.log_attributes('Queue downloader configured with following options')
 
     def add(self, item):
         """
@@ -36,6 +41,7 @@ class QueueDownloader(Runner):
             item: The item that will be downloaded.
         """
         self._queue.put(item)
+        logger.debug(f'Item added to download queue: {item}')
 
     def download_all(self):
         """
@@ -53,9 +59,12 @@ class QueueDownloader(Runner):
             dl_group = self._queue.get()
             if dl_group is not None:
                 self.executor.submit(self.download_group, dl_group=dl_group)
+                logger.debug(f'Item submitted to executor: {dl_group}')
             else:
+                logger.debug('Breaking out of download cycle')
                 break
         self.executor.shutdown(wait=True)
+        logger.info('Queue downloader shutdown')
 
     @verify_run
     def download_group(self, dl_group):

@@ -1,10 +1,14 @@
-import os.path
+import os
+import logging
 import requests
 
 from .config import DownloadConfig
 from .exceptions import RequestFailedException
 from .utils import get_output, get_name_from_url, _download_actual
 from .multi_part_downloader import MultiPartDownloader
+
+
+logger = logging.getLogger(__name__)
 
 
 def _download(url: str, output_path: str, config: DownloadConfig) -> None:
@@ -22,15 +26,20 @@ def _download(url: str, output_path: str, config: DownloadConfig) -> None:
     response = requests.head(url, timeout=config.timeout)
     if response.status_code != 200:
         raise RequestFailedException(url=url, status_code=response.status_code, message=response.reason)
+    logger.debug(f'Request to {url} successful')
     dir_path, name = get_output(output_path)
     if not name:
-        name = response.headers.get('Content-Disposition', get_name_from_url(url))
+        name = get_name_from_url(url)
+        logger.debug(f'Name taken from url: {name}')
     output = str(os.path.join(dir_path, name))
     size = int(response.headers.get('content-length', 0))
+    logger.debug(f'{url} file size: {size} bytes')
     if size > config.size_threshold:
+        logger.debug(f'File size exceeds threshold of {config.size_threshold}, multi-part downloader is being used')
         multi_part_downloader = MultiPartDownloader(url, output, file_size=size, config=config)
         multi_part_downloader.run()
     else:
+        logger.debug(f'File size under threshold of {config.size_threshold}, downloading file in one part')
         _download_actual(
             url=url,
             output_path=output,

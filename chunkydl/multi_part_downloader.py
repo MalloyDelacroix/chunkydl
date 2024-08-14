@@ -1,12 +1,16 @@
 import os
 import shutil
 import tempfile
+import logging
 from concurrent.futures import ThreadPoolExecutor
 from queue import Queue
 
 from .config import DownloadConfig
 from .runner import Runner
 from .utils import get_output, _download_actual
+
+
+logger = logging.getLogger(__name__)
 
 
 class MultiPartDownloader(Runner):
@@ -55,6 +59,7 @@ class MultiPartDownloader(Runner):
         self.executor = ThreadPoolExecutor(self.config.multi_part_thread_count)
         self.part_queue = Queue()
         self.temp_path = None
+        self.config.log_attributes('Multi-part downloader configured with following options')
 
     def run(self) -> None:
         """
@@ -87,6 +92,7 @@ class MultiPartDownloader(Runner):
             end: The end byte range to be downloaded.
             output_path: The path that the file part will be saved to.
         """
+        logger.debug(f'Downloading part to {output_path}: start: {start} - end: {end}')
         headers = self.config.get_headers(range=f'bytes={start}-{end}')
         _download_actual(
             url=self.url,
@@ -103,13 +109,14 @@ class MultiPartDownloader(Runner):
         the parts were stored during download.
         """
         with open(self.output_path, 'wb') as file:
+            logger.info(f'Joining file {self.output_path}')
             try:
                 self.write_parts_to_file(file)
                 self.remove_temp_path()
-            except FileNotFoundError:
+            except:
                 if self.config.clean_up_on_fail:
                     self.remove_temp_path()
-                print('Failed to join multi-part download_group')
+                logger.error(f'Failed to join multi-part file: {self.output_path}', exc_info=True)
 
     def write_parts_to_file(self, file):
         """
@@ -136,7 +143,9 @@ class MultiPartDownloader(Runner):
             (str): The path where the file part will be saved to.
         """
         if self.temp_path is None:
-            self.temp_path = tempfile.mkdtemp(dir=os.path.dirname(self.output_path))
+            dir_name = os.path.dirname(self.output_path)
+            logger.debug(f'Making new temporary directory: {dir_name}')
+            self.temp_path = tempfile.mkdtemp(dir=dir_name)
         if self.output_name is None or self.output_name == '':
             self.output_name = os.path.basename(self.url)
         return os.path.join(self.temp_path, f'{self.output_name}.part-{part}')
@@ -148,5 +157,6 @@ class MultiPartDownloader(Runner):
         """
         try:
             shutil.rmtree(self.temp_path)
+            logger.info(f'Removed temporary directory {self.temp_path}')
         except FileNotFoundError:
-            pass
+            logger.error(f'Failed to remove temporary directory {self.temp_path}', exc_info=True)

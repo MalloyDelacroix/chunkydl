@@ -1,3 +1,8 @@
+import logging
+
+
+logger = logging.getLogger(__name__)
+
 
 class DownloadConfig:
 
@@ -86,3 +91,18 @@ class DownloadConfig:
         headers = self.headers.copy()
         headers.update(kwargs)
         return headers
+
+    def log_attributes(self, message):
+        logger.debug(
+            f'{message}: '
+            f'timeout: {self.timeout}, '
+            f'retries: {self.retries}, '
+            f'chunk_size: {self.chunk_size}, '
+            f'headers: {self.headers}, '
+            f'verify_ssl: {self.verify_ssl}, '
+            f'size_threshold: {self.size_threshold}, '
+            f'file_download_thread_count: {self.file_download_thread_count}, '
+            f'multi_part_thread_count: {self.multi_part_thread_count}, '
+            f'run_perpetual: {self.run_perpetual}, '
+            f'clean_up_on_fail: {self.clean_up_on_fail}'
+        )
