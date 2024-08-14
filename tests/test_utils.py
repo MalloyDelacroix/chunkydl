@@ -96,12 +96,14 @@ class TestDownloadActual(unittest.TestCase):
         chunk_size = 1024
         verify_ssl = False
 
-        mock_response = MagicMock(status_code=200)
+        mock_response = MagicMock(status_code=200, url=url)
         mock_get.return_value = mock_response
 
         result = _download_actual(url, output_path, timeout, headers, chunk_size, verify_ssl)
         mock_get.assert_called_with(url, stream=True, timeout=timeout, headers=headers, verify=verify_ssl)
-        self.assertTrue(result)
+        self.assertEqual(url, result.url)
+        self.assertEqual(200, result.status_code)
+
         mock_file.assert_called()
 
     @patch('requests.get')
