@@ -31,6 +31,7 @@ class QueueDownloader(Runner):
         self.config = config
         self._queue = Queue(maxsize=-1)
         self.executor = ThreadPoolExecutor(config.file_download_thread_count)
+        self.results = []
         self.config.log_attributes('Queue downloader configured with following options')
 
     def add(self, item):
@@ -58,7 +59,8 @@ class QueueDownloader(Runner):
         while self.continue_run:
             dl_group = self._queue.get()
             if dl_group is not None:
-                self.executor.submit(self.download_group, dl_group=dl_group)
+                future = self.executor.submit(self.download_group, dl_group=dl_group)
+                future.add_done_callback(self.handle_future)
                 logger.debug(f'Item submitted to executor: {dl_group}')
             else:
                 logger.debug('Breaking out of download cycle')
@@ -79,4 +81,13 @@ class QueueDownloader(Runner):
                     parameters.
         """
         url, output_path, config = dl_group
-        _download(url, output_path, config)
+        return _download(url, output_path, config)
+
+    def handle_future(self, future):
+        """
+        Gets the result from an executed future and adds it to the results list.
+
+        Args:
+            future: The future as returned from submitting work to the thread pool executor.
+        """
+        self.results.append(future.result())
