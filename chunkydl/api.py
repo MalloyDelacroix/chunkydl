@@ -84,7 +84,6 @@ def download_list(urls: list[Union[str, DLGroup]], output_dir: str, **kwargs):
         if isinstance(url, str):
             group = DLGroup(url, output_dir, config)
             downloader.add(group)
-            print(f'Added {url}')
         else:
             downloader.add(url)
     downloader.add(None)
