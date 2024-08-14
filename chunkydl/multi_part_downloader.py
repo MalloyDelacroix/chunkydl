@@ -104,15 +104,25 @@ class MultiPartDownloader(Runner):
         """
         with open(self.output_path, 'wb') as file:
             try:
-                for part in range(self.part_count):
-                    path = self.get_output_path(part)
-                    with open(path, 'rb') as part_file:
-                        file.write(part_file.read())
+                self.write_parts_to_file(file)
                 self.remove_temp_path()
             except FileNotFoundError:
                 if self.config.clean_up_on_fail:
                     self.remove_temp_path()
                 print('Failed to join multi-part download_group')
+
+    def write_parts_to_file(self, file):
+        """
+        Iterates through the saved temporary files reading the data from each one and writing it into the supplied open
+        file to combine the parts into the single file.
+
+        Args:
+            file: An open writable file to which the file parts will be written.
+        """
+        for part in range(self.part_count):
+            path = self.get_output_path(part)
+            with open(path, 'wb') as part_file:
+                file.write(part_file.read())
 
     def get_output_path(self, part: int):
         """
