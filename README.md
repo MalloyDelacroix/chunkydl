@@ -11,8 +11,10 @@ Chunky DL also supports multithreaded download for downloading multiple files at
 and the number of downloads you wish to run simultaneously, and the output path and no further configuration is required.
 
 ![Build Status](https://img.shields.io/badge/build-passing-brightgreen)
-![License](https://img.shields.io/badge/license-MIT-blue)
-![Version](https://img.shields.io/badge/version-1.0.0-blue)
+![GitHub License](https://img.shields.io/github/license/MalloyDelacroix/chunkydl?color=FFC000)
+
+[//]: # (![GitHub Tag]&#40;https://img.shields.io/github/v/tag/MalloyDelacroix/chunkydl?color=FFC000&#41;)
+
 ------------
 
 ## Installation
