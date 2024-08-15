@@ -31,7 +31,6 @@ class DownloadConfig:
                     class.
                 complete_headers (dict): Overwrites the default headers.  If supplied, these will be the only headers
                     used for each request.
-                verify_ssl (bool): Whether to verify the SSL certificate on each request.  Default is True.
                 size_threshold (int): The size, in bytes, after which the multipart downloader will be used to download
                     a file.  This size limit is also used for determining the size of each larger chunk that will be
                     downloaded by each thread of the multipart downloader, and therefor the number of chunks the file
@@ -50,7 +49,6 @@ class DownloadConfig:
         self.chunk_size = kwargs.get('chunk_size', 1024 * 1024)
         self._additional_headers = kwargs.get('additional_headers', None)
         self._complete_headers = kwargs.get('headers', None)
-        self.verify_ssl = kwargs.get('verify_ssl', True)
         self.size_threshold = kwargs.get('size_threshold', 1024 * 1024 * 100)
         self.file_download_thread_count = kwargs.get('file_download_thread_count', 4)
         self.multi_part_thread_count = kwargs.get('multi_part_thread_count', 4)
@@ -99,7 +97,6 @@ class DownloadConfig:
             f'retries: {self.retries}, '
             f'chunk_size: {self.chunk_size}, '
             f'headers: {self.headers}, '
-            f'verify_ssl: {self.verify_ssl}, '
             f'size_threshold: {self.size_threshold}, '
             f'file_download_thread_count: {self.file_download_thread_count}, '
             f'multi_part_thread_count: {self.multi_part_thread_count}, '

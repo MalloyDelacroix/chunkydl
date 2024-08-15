@@ -46,5 +46,4 @@ def _download(url: str, output_path: str, config: DownloadConfig) -> Response:
             timeout=config.timeout,
             chunk_size=config.chunk_size,
             headers=config.headers,
-            verify_ssl=config.verify_ssl,
         )

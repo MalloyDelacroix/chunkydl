@@ -100,7 +100,6 @@ class MultiPartDownloader(Runner):
             timeout=self.config.timeout,
             chunk_size=self.config.chunk_size,
             headers=headers,
-            verify_ssl=self.config.verify_ssl,
         )
 
     def join_file(self) -> None:

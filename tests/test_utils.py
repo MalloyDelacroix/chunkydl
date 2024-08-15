@@ -117,13 +117,12 @@ class TestDownloadActual(unittest.TestCase):
         timeout = 10
         headers = {}
         chunk_size = 1024
-        verify_ssl = False
 
         mock_response = MagicMock(status_code=200, url=url)
         mock_get.return_value = mock_response
 
-        result = _download_actual(url, output_path, timeout, headers, chunk_size, verify_ssl)
-        mock_get.assert_called_with(url, stream=True, timeout=timeout, headers=headers, verify=verify_ssl)
+        result = _download_actual(url, output_path, timeout, headers, chunk_size)
+        mock_get.assert_called_with(url, stream=True, timeout=timeout, headers=headers)
         self.assertEqual(url, result.url)
         self.assertEqual(200, result.status_code)
 
@@ -139,13 +138,12 @@ class TestDownloadActual(unittest.TestCase):
         timeout = 10
         headers = {}
         chunk_size = 1024
-        verify_ssl = False
 
         mock_response = MagicMock(status_code=404)
         mock_get.return_value = mock_response
 
         with self.assertRaises(RequestFailedException) as context:
-            _download_actual(url, output_path, timeout, headers, chunk_size, verify_ssl)
+            _download_actual(url, output_path, timeout, headers, chunk_size)
 
         self.assertEqual(context.exception.status_code, 404)
         self.assertEqual(context.exception.url, url)
@@ -155,10 +153,9 @@ class TestDownloadActual(unittest.TestCase):
         timeout = 10
         headers = {}
         chunk_size = 1024
-        verify_ssl = False
 
         with self.assertRaises(ValueError):
-            _download_actual('', output_path, timeout, headers, chunk_size, verify_ssl)
+            _download_actual('', output_path, timeout, headers, chunk_size)
 
         with self.assertRaises(ValueError):
-            _download_actual(None, output_path, timeout, headers, chunk_size, verify_ssl)
+            _download_actual(None, output_path, timeout, headers, chunk_size)

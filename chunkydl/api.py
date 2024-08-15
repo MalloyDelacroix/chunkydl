@@ -25,7 +25,6 @@ def download(url: str, output_path: str, **kwargs) -> Response:
                 class.
             complete_headers (dict): Overwrites the default headers.  If supplied, these will be the only headers
                 used for each request.
-            verify_ssl (bool): Whether to verify the SSL certificate on each request.  Default is True.
             size_threshold (int): The size, in bytes, after which the multipart downloader will be used to download
                 a file.  This size limit is also used for determining the size of each larger chunk that will be
                 downloaded by each thread of the multipart downloader, and therefor the number of chunks the file
@@ -64,7 +63,6 @@ def download_list(urls: list[Union[str, DLGroup]], output_dir: str, **kwargs) ->
                 class.
             complete_headers (dict): Overwrites the default headers.  If supplied, these will be the only headers
                 used for each request.
-            verify_ssl (bool): Whether to verify the SSL certificate on each request.  Default is True.
             size_threshold (int): The size, in bytes, after which the multipart downloader will be used to download
                 a file.  This size limit is also used for determining the size of each larger chunk that will be
                 downloaded by each thread of the multipart downloader, and therefor the number of chunks the file

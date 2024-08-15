@@ -78,7 +78,7 @@ def get_name_from_url(url: str) -> str:
 
 
 def _download_actual(
-    url: str, output_path: str, timeout: int, headers: dict, chunk_size: int, verify_ssl: bool = False, **kwargs
+    url: str, output_path: str, timeout: int, headers: dict, chunk_size: int, **kwargs
 ) -> requests.Response:
     """
     Download a file from a given URL and save it to the specified output path.
@@ -89,14 +89,13 @@ def _download_actual(
         timeout (int): The timeout for the request in seconds.
         headers (dict): The headers to include in the request.
         chunk_size (int): The size of each chunk to download.
-        verify_ssl (bool, optional): Whether to verify SSL certificates (default is False).
         **kwargs: Additional keyword arguments to pass to the requests.get function.
 
     Returns:
         Response: A response object containing useful information from the response returned by the get request made in
         this method.
     """
-    response = requests.get(url, stream=True, timeout=timeout, headers=headers, verify=verify_ssl, **kwargs)
+    response = requests.get(url, stream=True, timeout=timeout, headers=headers, **kwargs)
     if response.status_code != 200 and response.status_code != 206:
         raise RequestFailedException(url, response.status_code, response.reason)
     with open(output_path, 'wb') as f:
