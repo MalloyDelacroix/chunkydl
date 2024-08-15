@@ -66,7 +66,7 @@ output path, and configuration for each url that you wish to download:
 import chunkydl
 from chunkydl import DownloadConfig, DLGroup
 
-download_list = [
+dl_list = [
     DLGroup(
         url='http://example.com/path/to/file_one.mp4', 
         output_path='C:/Users/User/Downloads/new_file_one.mp4',
@@ -83,13 +83,15 @@ download_list = [
         config=DownloadConfig()  # use default configuration
     ),
 ]
+
+chunkydl.download_list(dl_list)
 ```
 
 ## Features
 
-* Multipart downloads: Large files are downloaded in multiple parts simultaneously to increase download speed.
-* Multiple concurrent downloads: Download multiple files simultaneously without having to set up a custom framework.
-* Perpetual download queue: Queue downloader can be run perpetually in its own thread.  The download queue stays running
+* **Multipart downloads:** Large files are downloaded in multiple parts simultaneously to increase download speed.
+* **Multiple concurrent downloads:** Download multiple files simultaneously without having to set up a custom framework.
+* **Perpetual download queue:** Queue downloader can be run perpetually in its own thread.  The download queue stays running
     until you are ready for it to stop.  Simply keep adding urls to the queue to keep downloading.
-* Highly configurable: Downloads can be configured exactly how you need them. You control the thread counts, size thresholds, 
+* **Highly configurable:** Downloads can be configured exactly how you need them. You control the thread counts, size thresholds, 
     headers, retries, and more all with simple configuration parameters.
