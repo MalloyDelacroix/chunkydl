@@ -29,15 +29,16 @@ def download(url: str, output_path: str, **kwargs) -> Response:
                 a file.  This size limit is also used for determining the size of each larger chunk that will be
                 downloaded by each thread of the multipart downloader, and therefor the number of chunks the file
                 will be broken into for download.  Default is 100MB.
-            multi_part_thread_count (int): The number of download threads that will be used to download a file with
+            multipart_threads (int): The number of download threads that will be used to download a file with
                 the multipart downloader.
             run_perpetual (bool): Indicates if the download loop should stay open after the initial queue is empty.
                 True will keep the download thread alive and the queue active so that more downloads can be added to
                 the download queue.  Default is False.
             clean_up_on_fail (bool): Indicates if the multiple parts of a file downloaded with the multipart
                 downloader will be deleted if some part of the multipart download fails.  Default is False.
+            config (DownloadConfig): A DownloadConfig object that holds the configuration variables supplied.
     """
-    config = DownloadConfig(**kwargs)
+    config = kwargs.get('config', DownloadConfig(**kwargs))
     return _download(url, output_path, config)
 
 
@@ -68,15 +69,16 @@ def download_list(urls: list[Union[str, DLGroup]], output_dir: str, **kwargs) ->
                 downloaded by each thread of the multipart downloader, and therefor the number of chunks the file
                 will be broken into for download.  Default is 100MB.
             file_download_thread_count (int): The number of download threads that will be used to download a file.
-            multi_part_thread_count (int): The number of download threads that will be used to download a file with
+            multipart_threads (int): The number of download threads that will be used to download a file with
                 the multipart downloader.
             run_perpetual (bool): Indicates if the download loop should stay open after the initial queue is empty.
                 True will keep the download thread alive and the queue active so that more downloads can be added to
                 the download queue.  Default is False.
             clean_up_on_fail (bool): Indicates if the multiple parts of a file downloaded with the multipart
                 downloader will be deleted if some part of the multipart download fails.  Default is False.
+            config (DownloadConfig): A DownloadConfig object that holds the configuration variables supplied.
     """
-    config = DownloadConfig(**kwargs)
+    config = kwargs.get('config', DownloadConfig(**kwargs))
     downloader = QueueDownloader(config=config)
     for url in urls:
         if isinstance(url, str):
