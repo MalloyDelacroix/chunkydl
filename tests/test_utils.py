@@ -3,7 +3,7 @@ import unittest
 from unittest.mock import patch, MagicMock, mock_open
 
 from chunkydl.utils import get_output, get_name_from_url, _download_actual
-from chunkydl.exceptions import RequestFailedException
+from chunkydl.exceptions import RequestFailedException, OutputPathRequiredException
 
 
 class TestGetOutput(unittest.TestCase):
@@ -159,3 +159,23 @@ class TestDownloadActual(unittest.TestCase):
 
         with self.assertRaises(ValueError):
             _download_actual(None, output_path, timeout, headers, chunk_size)
+
+    def test_raises_exception_when_no_output_path_is_provided(self):
+        url = "http://example.com/file"
+        timeout = 10
+        headers = {}
+        chunk_size = 1024
+
+        with self.assertRaises(OutputPathRequiredException):
+            _download_actual(url, None, timeout, headers, chunk_size)
+
+    def test_raises_exception_when_empty_output_path_is_provided(self):
+        url = "http://example.com/file"
+        timeout = 10
+        headers = {}
+        chunk_size = 1024
+
+        with self.assertRaises(OutputPathRequiredException):
+            _download_actual(url, '', timeout, headers, chunk_size)
+
+    # TODO: test that additional kwargs supplied to _download_actual are used in the request header

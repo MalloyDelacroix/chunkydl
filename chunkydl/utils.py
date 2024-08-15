@@ -4,7 +4,7 @@ from typing import NamedTuple, Dict
 from datetime import timedelta
 import requests
 
-from .exceptions import RequestFailedException
+from .exceptions import RequestFailedException, OutputPathRequiredException
 from .config import DownloadConfig
 
 
@@ -95,6 +95,8 @@ def _download_actual(
         Response: A response object containing useful information from the response returned by the get request made in
         this method.
     """
+    if output_path is None or output_path == '':
+        raise OutputPathRequiredException()
     response = requests.get(url, stream=True, timeout=timeout, headers=headers, **kwargs)
     if response.status_code != 200 and response.status_code != 206:
         raise RequestFailedException(url, response.status_code, response.reason)
