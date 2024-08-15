@@ -86,7 +86,8 @@ class MultiPartDownloader(Runner):
 
     def download_part(self, start: int, end: int, output_path: str) -> None:
         """
-        Handles the actual downloading of each file chunk based on the parameters supplied.
+        Handles the downloading of each file chunk based on the start and end range values supplied.
+
         Args:
             start: The start byte range to be downloaded.
             end: The end byte range to be downloaded.
