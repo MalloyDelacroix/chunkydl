@@ -22,3 +22,17 @@ class RequestFailedException(Exception):
         self.status_code = status_code
         self.message = message
         super().__init__(f'Request to {url} failed with satus code {status_code}: {message}', *args)
+
+
+class OutputPathRequiredException(Exception):
+
+    """
+    An exception raised when an output path is not supplied for a download.
+
+    Args:
+        *args: Any additional arguments that should be shown to the user regarding the exception.
+    """
+
+    def __init__(self, *args):
+        super().__init__(f'No output path supplied for download.  All downloads need at least a directory path in '
+                         f'which to save downloaded files.', *args)
