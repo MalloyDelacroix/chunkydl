@@ -56,7 +56,7 @@ class MultiPartDownloader(Runner):
         self.config = config
         self.part_count = 0
         self.failed_parts = 0
-        self.executor = ThreadPoolExecutor(self.config.multi_part_thread_count)
+        self.executor = ThreadPoolExecutor(self.config.multipart_threads)
         self.part_queue = Queue()
         self.temp_path = None
         self.config.log_attributes('Multi-part downloader configured with following options')

@@ -15,7 +15,7 @@ class TestRun(unittest.TestCase):
         """
         config = Mock()
         config.size_threshold = 100
-        config.multi_part_thread_count = 4
+        config.multipart_threads = 4
         url = 'http://example.com/file'
         output_path = '/path/to/directory'
         file_size = 450
@@ -40,7 +40,7 @@ class TestRun(unittest.TestCase):
         """
         config = Mock()
         config.size_threshold = 100
-        config.multi_part_thread_count = 4
+        config.multipart_threads = 4
         url = 'http://example.com/file'
         output_path = '/path/to/directory'
         file_size = 300
@@ -64,7 +64,7 @@ class TestRun(unittest.TestCase):
         """
         config = Mock()
         config.size_threshold = 100
-        config.multi_part_thread_count = 4
+        config.multipart_threads = 4
         url = 'http://example.com/file'
         output_path = '/path/to/directory'
         file_size = 50
