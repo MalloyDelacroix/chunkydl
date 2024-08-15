@@ -1,4 +1,4 @@
-from typing import Union
+from typing import Union, Optional
 
 from .config import DownloadConfig
 from .download import _download
@@ -42,7 +42,7 @@ def download(url: str, output_path: str, **kwargs) -> Response:
     return _download(url, output_path, config)
 
 
-def download_list(urls: list[Union[str, DLGroup]], output_dir: str, **kwargs) -> list[Response]:
+def download_list(urls: list[Union[str, DLGroup]], output_dir: Optional[str], **kwargs) -> list[Response]:
     """
     Downloads a list of urls to the specified output directory using the configuration variables that are supplied.
     Multiple files will be downloaded simultaneously depending on the supplied configuration variables.
@@ -52,8 +52,9 @@ def download_list(urls: list[Union[str, DLGroup]], output_dir: str, **kwargs) ->
             downloaded. Supplying a list of strings will download all files to the directory supplied using the
             configuration variables supplied.  If individual configuration is required for each url, a list of DLGroup
             objects can be supplied which specify the url, output path, and configuration variables for each file.
-        output_dir: The directory where the files will be saved.  The path should be to a directory.  If a path to a
-            file is supplied, the file's containing directory will be used.
+        output_dir (str, optional): The directory where the files will be saved.  The path should be to a directory.
+            If a path to a file is supplied, the file's containing directory will be used.  This parameter is only
+            optional if a per-download output path is provided for each url being downloaded.
         **kwargs:
             timout (int): The timout time, in seconds, before a request is abandoned.  Default is 10.
             retries (int): The number of times a request will be retried.  Default is 3.
