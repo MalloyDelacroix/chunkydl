@@ -79,6 +79,29 @@ class TestGetNameFromURL(unittest.TestCase):
         result = get_name_from_url(url)
         self.assertEqual(result, expected)
 
+    def test_handles_urls_with_query_parameters(self):
+        url = "http://example.com/path/to/file.txt?query=param"
+        expected = "file.txt"
+        result = get_name_from_url(url)
+        self.assertEqual(expected, result)
+
+    def test_deals_with_urls_that_have_no_file_name_in_path(self):
+        url = "http://example.com/path/to/"
+        expected = ""
+        result = get_name_from_url(url)
+        self.assertEqual(expected, result)
+
+    def test_handles_urls_with_different_schemes(self):
+        urls = [
+            "http://example.com/path/to/file.txt",
+            "https://example.com/path/to/file.txt",
+            "ftp://example.com/path/to/file.txt"
+        ]
+        expected = "file.txt"
+        for url in urls:
+            result = get_name_from_url(url)
+            self.assertEqual(result, expected)
+
 
 class TestDownloadActual(unittest.TestCase):
 
