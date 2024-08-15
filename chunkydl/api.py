@@ -69,7 +69,7 @@ def download_list(urls: list[Union[str, DLGroup]], output_dir: Optional[str], **
                 a file.  This size limit is also used for determining the size of each larger chunk that will be
                 downloaded by each thread of the multipart downloader, and therefor the number of chunks the file
                 will be broken into for download.  Default is 100MB.
-            file_download_thread_count (int): The number of download threads that will be used to download a file.
+            download_threads (int): The number of download threads that will be used to download a file.
             multipart_threads (int): The number of download threads that will be used to download a file with
                 the multipart downloader.
             run_perpetual (bool): Indicates if the download loop should stay open after the initial queue is empty.

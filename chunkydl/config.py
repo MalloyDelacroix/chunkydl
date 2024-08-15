@@ -35,7 +35,7 @@ class DownloadConfig:
                     a file.  This size limit is also used for determining the size of each larger chunk that will be
                     downloaded by each thread of the multipart downloader, and therefor the number of chunks the file
                     will be broken into for download.  Default is 100MB.
-                file_download_thread_count (int): The number of download threads that will be used to download a file.
+                download_threads (int): The number of download threads that will be used to download a file.
                 multipart_threads (int): The number of download threads that will be used to download a file with
                     the multipart downloader.
                 run_perpetual (bool): Indicates if the download loop should stay open after the initial queue is empty.
@@ -50,7 +50,7 @@ class DownloadConfig:
         self._additional_headers = kwargs.get('additional_headers', None)
         self._complete_headers = kwargs.get('headers', None)
         self.size_threshold = kwargs.get('size_threshold', 1024 * 1024 * 100)
-        self.file_download_thread_count = kwargs.get('file_download_thread_count', 4)
+        self.download_threads = kwargs.get('download_threads', 4)
         self.multipart_threads = kwargs.get('multipart_threads', 4)
         self.run_perpetual = kwargs.get('run_perpetual', False)
         self.clean_up_on_fail = kwargs.get('clean_up_on_fail', False)
@@ -98,7 +98,7 @@ class DownloadConfig:
             f'chunk_size: {self.chunk_size}, '
             f'headers: {self.headers}, '
             f'size_threshold: {self.size_threshold}, '
-            f'file_download_thread_count: {self.file_download_thread_count}, '
+            f'download_threads: {self.download_threads}, '
             f'multipart_threads: {self.multipart_threads}, '
             f'run_perpetual: {self.run_perpetual}, '
             f'clean_up_on_fail: {self.clean_up_on_fail}'

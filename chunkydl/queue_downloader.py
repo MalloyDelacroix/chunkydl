@@ -30,7 +30,7 @@ class QueueDownloader(Runner):
         super().__init__()
         self.config = config
         self._queue = Queue(maxsize=-1)
-        self.executor = ThreadPoolExecutor(config.file_download_thread_count)
+        self.executor = ThreadPoolExecutor(config.download_threads)
         self.results = []
         self.config.log_attributes('Queue downloader configured with following options')
 
