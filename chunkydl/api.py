@@ -42,7 +42,7 @@ def download(url: str, output_path: str, **kwargs) -> Response:
     return _download(url, output_path, config)
 
 
-def download_list(urls: list[Union[str, DLGroup]], output_dir: Optional[str], **kwargs) -> list[Response]:
+def download_list(urls: list[Union[str, DLGroup]], output_dir: Optional[str] = None, **kwargs) -> list[Response]:
     """
     Downloads a list of urls to the specified output directory using the configuration variables that are supplied.
     Multiple files will be downloaded simultaneously depending on the supplied configuration variables.
