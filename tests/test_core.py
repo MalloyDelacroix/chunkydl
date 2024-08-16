@@ -1,13 +1,18 @@
 import unittest
 from unittest.mock import patch, mock_open, MagicMock
 
-from chunkydl.core import _download_actual
+import requests.exceptions
+import urllib3
+from http.client import HTTPMessage
+
+from chunkydl import DownloadConfig
+from chunkydl.core import download_actual
 from chunkydl.exceptions import RequestFailedException
 
 
 class TestDownloadActual(unittest.TestCase):
 
-    @patch('requests.get')
+    @patch('requests.Session.get')
     @patch('builtins.open', new_callable=mock_open)
     def test_successful_download(self, mock_file, mock_get):
         """
@@ -16,50 +21,61 @@ class TestDownloadActual(unittest.TestCase):
         """
         url = "http://example.com/file"
         output_path = "output.txt"
-        timeout = 10
-        headers = {}
-        chunk_size = 1024
+        config = DownloadConfig()
 
         mock_response = MagicMock(status_code=200, url=url)
         mock_get.return_value = mock_response
 
-        result = _download_actual(url, output_path, timeout, headers, chunk_size)
-        mock_get.assert_called_with(url, stream=True, timeout=timeout, headers=headers)
+        result = download_actual(url, output_path, config=config)
+        mock_get.assert_called_with(url, stream=True, timeout=config.timeout, headers=config.headers)
         self.assertEqual(url, result.url)
         self.assertEqual(200, result.status_code)
 
         mock_file.assert_called()
 
-    @patch('requests.get')
+    @patch('requests.Session.get')
     def test_non_200_206_status_code(self, mock_get):
         """
         Handles unsuccessful responses by raising RequestFailedException with the correct values.
         """
         url = "http://example.com/file"
         output_path = "output.txt"
-        timeout = 10
-        headers = {}
-        chunk_size = 1024
+        config = DownloadConfig()
 
         mock_response = MagicMock(status_code=404)
         mock_get.return_value = mock_response
 
         with self.assertRaises(RequestFailedException) as context:
-            _download_actual(url, output_path, timeout, headers, chunk_size)
+            download_actual(url, output_path, config=config)
 
         self.assertEqual(context.exception.status_code, 404)
         self.assertEqual(context.exception.url, url)
 
     def test_empty_url(self, ):
         output_path = "output.txt"
-        timeout = 10
-        headers = {}
-        chunk_size = 1024
+        config = DownloadConfig()
 
         with self.assertRaises(ValueError):
-            _download_actual('', output_path, timeout, headers, chunk_size)
+            download_actual('', output_path, config)
 
         with self.assertRaises(ValueError):
-            _download_actual(None, output_path, timeout, headers, chunk_size)
+            download_actual(None, output_path, config)
 
-    # TODO: test that additional kwargs supplied to _download_actual are used in the request header
+    @patch('requests.Session.get')
+    def test_retries_correctly_on_approved_status_codes(self, mock_get):
+        url = "http://example.com/file"
+        output_path = "output.txt"
+        config = DownloadConfig(retries=3, retry_status_codes=[503], backoff_factor=1)
+
+        mock_get.size_effect = [
+            requests.exceptions.ConnectionError('Failed first attempt'),
+            requests.exceptions.ConnectionError('Failed second attempt'),
+            MagicMock(status_code=200),
+        ]
+
+        # with self.assertRaises(RequestFailedException):
+        result = download_actual(url, output_path, config=config)
+        self.assertEqual(3, mock_get.call_count)
+
+
+    # TODO: test that additional kwargs supplied to download_actual are used in the request header

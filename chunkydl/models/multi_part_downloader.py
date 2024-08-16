@@ -7,7 +7,7 @@ from queue import Queue
 
 from .download_config import DownloadConfig
 from chunkydl.runner import Runner
-from chunkydl.core import _download_actual
+from chunkydl.core import download_actual
 from chunkydl.utils import get_output
 
 
@@ -96,12 +96,12 @@ class MultiPartDownloader(Runner):
         """
         logger.debug(f'Downloading part to {output_path}: start: {start} - end: {end}')
         headers = self.config.get_headers(range=f'bytes={start}-{end}')
-        _download_actual(
+        download_actual(
             url=self.url,
             output_path=output_path,
-            timeout=self.config.timeout,
-            chunk_size=self.config.chunk_size,
-            headers=headers,
+            config=self.config,
+            start=start,
+            end=end
         )
 
     def join_file(self) -> None:

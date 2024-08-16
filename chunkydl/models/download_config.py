@@ -3,6 +3,16 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+RETRY_STATUS_CODES = [
+    408,
+    425,
+    429,
+    500,
+    502,
+    503,
+    504,
+]
+
 
 class DownloadConfig:
 
@@ -46,6 +56,8 @@ class DownloadConfig:
         """
         self.timeout = kwargs.get('timeout', 10)
         self.retries = kwargs.get('retries', 3)
+        self.retry_status_codes = kwargs.get('retry_status_codes', RETRY_STATUS_CODES)
+        self.backoff_factor = kwargs.get('backoff_factor', 1)
         self.chunk_size = kwargs.get('chunk_size', 1024 * 1024)
         self._additional_headers = kwargs.get('additional_headers', None)
         self._complete_headers = kwargs.get('headers', None)

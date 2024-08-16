@@ -4,7 +4,7 @@ import requests
 
 from .models.download_config import DownloadConfig
 from .exceptions import RequestFailedException
-from .core import _download_actual
+from .core import download_actual
 from .utils import get_output, get_name_from_url
 from .models.data_models import Response
 from .models.multi_part_downloader import MultiPartDownloader
@@ -42,10 +42,8 @@ def _download(url: str, output_path: str, config: DownloadConfig) -> Response:
         multi_part_downloader.run()
     else:
         logger.debug(f'File size under threshold of {config.size_threshold}, downloading file in one part')
-        return _download_actual(
+        return download_actual(
             url=url,
             output_path=output,
-            timeout=config.timeout,
-            chunk_size=config.chunk_size,
-            headers=config.headers,
+            config=config
         )
