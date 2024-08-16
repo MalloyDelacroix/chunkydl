@@ -7,7 +7,8 @@ from queue import Queue
 
 from .download_config import DownloadConfig
 from chunkydl.runner import Runner
-from chunkydl.utils import get_output, _download_actual
+from chunkydl.core import _download_actual
+from chunkydl.utils import get_output
 
 
 logger = logging.getLogger(__name__)
