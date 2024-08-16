@@ -17,8 +17,8 @@ limitations under the License.
 from .api import download, download_list
 from .models.queue_downloader import QueueDownloader
 from .models.download_config import DownloadConfig
-from .utils import DLGroup
+from .models.data_models import DLGroup
 from .exceptions import RequestFailedException
 
 
-__all__ = ['download', 'download_list', 'QueueDownloader', 'DownloadConfig', 'DLGroup', 'RequestFailedException']
+__all__ = ['download', 'download_list', 'QueueDownloader', 'DownloadConfig', 'RequestFailedException']

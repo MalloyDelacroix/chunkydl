@@ -4,7 +4,8 @@ import requests
 
 from .models.download_config import DownloadConfig
 from .exceptions import RequestFailedException
-from .utils import get_output, get_name_from_url, _download_actual, Response
+from .utils import get_output, get_name_from_url, _download_actual
+from .models.data_models import Response
 from .models.multi_part_downloader import MultiPartDownloader
 
 

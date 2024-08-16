@@ -18,7 +18,8 @@ from typing import Union, Optional
 
 from .models.download_config import DownloadConfig
 from .download import _download
-from .utils import DLGroup, Response
+from .models.data_models import Response
+from .models.data_models import DLGroup
 from .models.queue_downloader import QueueDownloader
 
 
