@@ -44,6 +44,16 @@ class QueueDownloader(Runner):
         self._queue.put(item)
         logger.debug(f'Item added to download queue: {item}')
 
+    def add_multiple(self, items):
+        """
+        Adds multiple items to the download queue.
+
+        Args:
+            items (list[DLGroup]): A list of items to be added.
+        """
+        for item in items:
+            self.add(item)
+
     def download_all(self):
         """
         Calls the run method in a more concise and user-friendly way.

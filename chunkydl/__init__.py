@@ -21,4 +21,4 @@ from .models.data_models import DLGroup
 from .exceptions import RequestFailedException
 
 
-__all__ = ['download', 'download_list', 'QueueDownloader', 'DownloadConfig', 'RequestFailedException']
+__all__ = ['download', 'download_list', 'QueueDownloader', 'DownloadConfig', 'RequestFailedException', 'DLGroup']

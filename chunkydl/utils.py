@@ -1,9 +1,10 @@
 import os
+from typing import Union
 from urllib.parse import urlparse
 import requests
 
 from .exceptions import RequestFailedException, OutputPathRequiredException
-from .models.data_models import Response
+from .models.data_models import DLGroup, Response
 
 
 def get_output(output_path: str) -> tuple:
@@ -87,3 +88,25 @@ def make_response(response: requests.Response) -> Response:
         status_code=response.status_code,
         elapsed=response.elapsed,
     )
+
+
+def convert_urls(urls: list[Union[str, DLGroup]], output_dir, config) -> list[DLGroup]:
+    """
+    Verifies that the supplied urls are DLGroup objects and if not, converts them.
+
+    Args:
+        urls (list[Union[str, DLGroup]]): The list of urls to check or convert.:
+        output_dir (str): The output directory where the downloaded files will be saved.
+        config (DLConfig): The DLConfig object used to configure the downloaded files.
+
+    Returns:
+        list[DLGroup]: A list of DLGroup objects with necessary download parameters.
+    """
+    groups = []
+    for url in urls:
+        if isinstance(url, str):
+            group = DLGroup(url=url, output_path=output_dir, config=config)
+            groups.append(group)
+        else:
+            groups.append(url)
+    return groups

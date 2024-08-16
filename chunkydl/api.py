@@ -21,6 +21,7 @@ from .download import _download
 from .models.data_models import Response
 from .models.data_models import DLGroup
 from .models.queue_downloader import QueueDownloader
+from .utils import convert_urls
 
 
 def download(url: str, output_path: str, **kwargs) -> Response:
@@ -97,13 +98,9 @@ def download_list(urls: list[Union[str, DLGroup]], output_dir: Optional[str] = N
             config (DownloadConfig): A DownloadConfig object that holds the configuration variables supplied.
     """
     config = kwargs.get('config', DownloadConfig(**kwargs))
+    dl_groups = convert_urls(urls, output_dir, config)
     downloader = QueueDownloader(config=config)
-    for url in urls:
-        if isinstance(url, str):
-            group = DLGroup(url, output_dir, config)
-            downloader.add(group)
-        else:
-            downloader.add(url)
-    downloader.add(None)
+    downloader.add_multiple(dl_groups)
+    downloader.add(None)  # shutdown downloader after items
     downloader.run()
     return downloader.results

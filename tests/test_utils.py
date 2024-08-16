@@ -2,8 +2,9 @@ import os
 import unittest
 from unittest.mock import patch, MagicMock, mock_open
 
-from chunkydl.utils import get_output, get_name_from_url, _download_actual
+from chunkydl.utils import get_output, get_name_from_url, _download_actual, convert_urls
 from chunkydl.exceptions import RequestFailedException, OutputPathRequiredException
+from chunkydl import DownloadConfig, DLGroup
 
 
 class TestGetOutput(unittest.TestCase):
@@ -179,3 +180,57 @@ class TestDownloadActual(unittest.TestCase):
             _download_actual(url, '', timeout, headers, chunk_size)
 
     # TODO: test that additional kwargs supplied to _download_actual are used in the request header
+
+
+class TestConvertUrls(unittest.TestCase):
+
+    def test_list_of_urls_are_all_converted(self):
+        output_path = '/path/to/directory/'
+        config = DownloadConfig()
+        urls = [
+            'http://example.com/file.txt',
+            'http://example_two.com/file.jpg',
+            'http://example.com/file_four_hundered.mp4',
+        ]
+
+        groups = convert_urls(urls, output_path, config)
+        self.assertEqual(len(urls), len(groups))
+        for index, group in enumerate(groups):
+            self.assertTrue(isinstance(group, DLGroup))
+            self.assertEqual(urls[index], group.url)
+            self.assertEqual(output_path, group.output_path)
+            self.assertEqual(config, group.config)
+
+    def test_list_of_dlgroups_are_unchanged(self):
+        output_path = '/path/to/directory/'
+        config = DownloadConfig()
+        urls = [
+            DLGroup('http://example.com/file.txt', output_path + 'one.txt', config),
+            DLGroup('http://example_two.com/file.jpg', output_path + 'two.jpg', config),
+            DLGroup('http://example.com/file_four_hundered.mp4', output_path + 'three.mp4', config),
+        ]
+
+        groups = convert_urls(urls, output_path, config)
+        self.assertEqual(len(urls), len(groups))
+        for index, group in enumerate(groups):
+            self.assertEqual(urls[index], group)
+
+    def test_mixed_list_is_handled_correctly(self):
+        output_path = '/path/to/directory/'
+        config = DownloadConfig()
+        urls = [
+            'http://example.com/file.txt',
+            'http://example.com/file_four_hundered.mp4',
+            DLGroup('http://example_two.com/file.jpg', output_path + 'three.jpg', config),
+            DLGroup('http://example.com/filefilefile.mp4', output_path + 'four.mp4', config),
+        ]
+
+        groups = convert_urls(urls, output_path, config)
+        self.assertEqual(len(urls), len(groups))
+        for index, group in enumerate(groups):
+            self.assertTrue(isinstance(group, DLGroup))
+
+    def test_handles_empty_url_list(self):
+        urls = []
+        groups = convert_urls(urls, '/downloads', DownloadConfig())
+        self.assertEqual([], groups)
