@@ -3,7 +3,7 @@ from unittest.mock import Mock
 import time
 
 from chunkydl import DownloadConfig
-from chunkydl.queue_downloader import QueueDownloader
+from chunkydl.models.queue_downloader import QueueDownloader
 
 
 class TestRun(unittest.TestCase):

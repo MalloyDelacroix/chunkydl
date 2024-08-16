@@ -5,7 +5,7 @@ from datetime import timedelta
 import requests
 
 from .exceptions import RequestFailedException, OutputPathRequiredException
-from .config import DownloadConfig
+from .models.download_config import DownloadConfig
 
 
 class DLGroup(NamedTuple):

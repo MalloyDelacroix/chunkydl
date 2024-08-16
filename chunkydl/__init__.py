@@ -15,8 +15,8 @@ limitations under the License.
 """
 
 from .api import download, download_list
-from .queue_downloader import QueueDownloader
-from .config import DownloadConfig
+from .models.queue_downloader import QueueDownloader
+from .models.download_config import DownloadConfig
 from .utils import DLGroup
 from .exceptions import RequestFailedException
 

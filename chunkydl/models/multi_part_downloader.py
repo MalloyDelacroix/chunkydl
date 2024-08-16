@@ -5,9 +5,9 @@ import logging
 from concurrent.futures import ThreadPoolExecutor
 from queue import Queue
 
-from .config import DownloadConfig
-from .runner import Runner
-from .utils import get_output, _download_actual
+from .download_config import DownloadConfig
+from chunkydl.runner import Runner
+from chunkydl.utils import get_output, _download_actual
 
 
 logger = logging.getLogger(__name__)

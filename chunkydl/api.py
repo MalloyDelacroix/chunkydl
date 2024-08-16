@@ -16,10 +16,10 @@ limitations under the License.
 
 from typing import Union, Optional
 
-from .config import DownloadConfig
+from .models.download_config import DownloadConfig
 from .download import _download
 from .utils import DLGroup, Response
-from .queue_downloader import QueueDownloader
+from .models.queue_downloader import QueueDownloader
 
 
 def download(url: str, output_path: str, **kwargs) -> Response:

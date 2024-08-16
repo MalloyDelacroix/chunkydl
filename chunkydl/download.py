@@ -2,10 +2,10 @@ import os
 import logging
 import requests
 
-from .config import DownloadConfig
+from .models.download_config import DownloadConfig
 from .exceptions import RequestFailedException
 from .utils import get_output, get_name_from_url, _download_actual, Response
-from .multi_part_downloader import MultiPartDownloader
+from .models.multi_part_downloader import MultiPartDownloader
 
 
 logger = logging.getLogger(__name__)

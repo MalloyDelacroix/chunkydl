@@ -3,7 +3,7 @@ import os
 import unittest
 from unittest.mock import patch, Mock, mock_open
 
-from chunkydl.multi_part_downloader import MultiPartDownloader
+from chunkydl.models.multi_part_downloader import MultiPartDownloader
 from chunkydl import DownloadConfig
 
 
@@ -89,8 +89,8 @@ class TestJoinFile(unittest.TestCase):
     def setUpClass(cls):
         logging.disable(logging.CRITICAL)
 
-    @patch('chunkydl.multi_part_downloader.MultiPartDownloader.remove_temp_path')
-    @patch('chunkydl.multi_part_downloader.ThreadPoolExecutor')
+    @patch('chunkydl.models.multi_part_downloader.MultiPartDownloader.remove_temp_path')
+    @patch('chunkydl.models.multi_part_downloader.ThreadPoolExecutor')
     @patch('builtins.open', new_callable=mock_open)
     def test_temp_dir_is_removed_on_completion(self, mock_file, mock_executor, mock_remove_path):
         downloader = MultiPartDownloader(
@@ -100,9 +100,10 @@ class TestJoinFile(unittest.TestCase):
         mock_remove_path.assert_called_once()
 
     @patch('builtins.open', new_callable=mock_open)
-    @patch('chunkydl.multi_part_downloader.MultiPartDownloader.remove_temp_path')
-    @patch('chunkydl.multi_part_downloader.ThreadPoolExecutor')
-    @patch('chunkydl.multi_part_downloader.MultiPartDownloader.write_parts_to_file', side_effect=FileNotFoundError)
+    @patch('chunkydl.models.multi_part_downloader.MultiPartDownloader.remove_temp_path')
+    @patch('chunkydl.models.multi_part_downloader.ThreadPoolExecutor')
+    @patch('chunkydl.models.multi_part_downloader.MultiPartDownloader.write_parts_to_file',
+           side_effect=FileNotFoundError)
     def test_temp_dir_is_removed_on_failure_when_specified(self, mock_write, mock_executor, mock_remove_path,
                                                            mock_file):
         config = DownloadConfig(clean_up_on_fail=True)
@@ -113,9 +114,10 @@ class TestJoinFile(unittest.TestCase):
         mock_remove_path.assert_called_once()
 
     @patch('builtins.open', new_callable=mock_open)
-    @patch('chunkydl.multi_part_downloader.MultiPartDownloader.remove_temp_path')
-    @patch('chunkydl.multi_part_downloader.ThreadPoolExecutor')
-    @patch('chunkydl.multi_part_downloader.MultiPartDownloader.write_parts_to_file', side_effect=FileNotFoundError)
+    @patch('chunkydl.models.multi_part_downloader.MultiPartDownloader.remove_temp_path')
+    @patch('chunkydl.models.multi_part_downloader.ThreadPoolExecutor')
+    @patch('chunkydl.models.multi_part_downloader.MultiPartDownloader.write_parts_to_file',
+           side_effect=FileNotFoundError)
     def test_temp_dir_is_not_removed_on_failure_when_specified(self, mock_write, mock_executor, mock_remove_path,
                                                            mock_file):
         config = DownloadConfig(clean_up_on_fail=False)
@@ -127,7 +129,7 @@ class TestJoinFile(unittest.TestCase):
 
 class TestGetOutputPath(unittest.TestCase):
 
-    @patch('chunkydl.multi_part_downloader.ThreadPoolExecutor')
+    @patch('chunkydl.models.multi_part_downloader.ThreadPoolExecutor')
     @patch('tempfile.mkdtemp')
     def test_does_not_create_temp_dir_when_class_variable_exists(self, mock_mkdtemp, mock_executor):
         """
@@ -147,7 +149,7 @@ class TestGetOutputPath(unittest.TestCase):
         self.assertEqual(expected_path, path)
         mock_mkdtemp.assert_not_called()
 
-    @patch('chunkydl.multi_part_downloader.ThreadPoolExecutor')
+    @patch('chunkydl.models.multi_part_downloader.ThreadPoolExecutor')
     @patch('tempfile.mkdtemp')
     def test_does_create_temp_dir_when_no_class_variable_exists(self, mock_mkdtemp, mock_executor):
         """
@@ -168,7 +170,7 @@ class TestGetOutputPath(unittest.TestCase):
         self.assertEqual(temp_path, downloader.temp_path)
         mock_mkdtemp.assert_called_with(dir='/path/to/directory')
 
-    @patch('chunkydl.multi_part_downloader.ThreadPoolExecutor')
+    @patch('chunkydl.models.multi_part_downloader.ThreadPoolExecutor')
     @patch('tempfile.mkdtemp')
     def test_handles_output_path_as_directory(self, mock_mkdtemp, mock_executor):
         """
