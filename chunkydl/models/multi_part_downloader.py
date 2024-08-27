@@ -4,6 +4,7 @@ import tempfile
 import logging
 from concurrent.futures import ThreadPoolExecutor
 from queue import Queue
+from typing import BinaryIO
 
 from .download_config import DownloadConfig
 from chunkydl.runner import Runner
@@ -119,7 +120,7 @@ class MultiPartDownloader(Runner):
                     self.remove_temp_path()
                 logger.error(f'Failed to join multi-part file: {self.output_path}', exc_info=True)
 
-    def write_parts_to_file(self, file):
+    def write_parts_to_file(self, file: BinaryIO) -> None:
         """
         Iterates through the saved temporary files reading the data from each one and writing it into the supplied open
         file to combine the parts into the single file.
@@ -132,7 +133,7 @@ class MultiPartDownloader(Runner):
             with open(path, 'wb') as part_file:
                 file.write(part_file.read())
 
-    def get_output_path(self, part: int):
+    def get_output_path(self, part: int) -> str:
         """
         Returns the temporary download path for a file part based on the part number supplied.  If a temporary directory
         does not exist, it will be created.
