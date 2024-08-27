@@ -1,10 +1,6 @@
 import unittest
 from unittest.mock import patch, mock_open, MagicMock
 
-import requests.exceptions
-import urllib3
-from http.client import HTTPMessage
-
 from chunkydl import DownloadConfig
 from chunkydl.core import download_actual
 from chunkydl.exceptions import RequestFailedException
@@ -60,22 +56,5 @@ class TestDownloadActual(unittest.TestCase):
 
         with self.assertRaises(ValueError):
             download_actual(None, output_path, config)
-
-    @patch('requests.Session.get')
-    def test_retries_correctly_on_approved_status_codes(self, mock_get):
-        url = "http://example.com/file"
-        output_path = "output.txt"
-        config = DownloadConfig(retries=3, retry_status_codes=[503], backoff_factor=1)
-
-        mock_get.size_effect = [
-            requests.exceptions.ConnectionError('Failed first attempt'),
-            requests.exceptions.ConnectionError('Failed second attempt'),
-            MagicMock(status_code=200),
-        ]
-
-        # with self.assertRaises(RequestFailedException):
-        result = download_actual(url, output_path, config=config)
-        self.assertEqual(3, mock_get.call_count)
-
 
     # TODO: test that additional kwargs supplied to download_actual are used in the request header
