@@ -4,9 +4,10 @@ from requests.adapters import HTTPAdapter, Retry
 from .exceptions import RequestFailedException
 from .utils import make_response
 from .models.download_config import DownloadConfig
+from .models.data_models import Response
 
 
-def download_actual(url: str, output_path: str, config: DownloadConfig, **kwargs) -> requests.Response:
+def download_actual(url: str, output_path: str, config: DownloadConfig, **kwargs) -> Response:
     """
     Download a file from a given URL and save it to the specified output path.
 
