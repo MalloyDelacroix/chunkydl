@@ -131,8 +131,9 @@ class MultiPartDownloader(Runner):
         """
         for part in range(self.part_count):
             path = self.get_output_path(part)
-            with open(path, 'wb') as part_file:
-                file.write(part_file.read())
+            with open(path, 'rb') as part_file:
+                data = part_file.read()
+                file.write(data)
 
     def get_output_path(self, part: int) -> str:
         """
