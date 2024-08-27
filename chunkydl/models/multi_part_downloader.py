@@ -2,6 +2,7 @@ import os
 import shutil
 import tempfile
 import logging
+from copy import deepcopy
 from concurrent.futures import ThreadPoolExecutor
 from queue import Queue
 from typing import BinaryIO
@@ -96,13 +97,13 @@ class MultiPartDownloader(Runner):
             output_path: The path that the file part will be saved to.
         """
         logger.debug(f'Downloading part to {output_path}: start: {start} - end: {end}')
+        config = deepcopy(self.config)
         headers = self.config.get_headers(range=f'bytes={start}-{end}')
+        config.headers = headers
         download_actual(
             url=self.url,
             output_path=output_path,
             config=self.config,
-            start=start,
-            end=end
         )
 
     def join_file(self) -> None:
