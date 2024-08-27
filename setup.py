@@ -5,7 +5,7 @@ setup(
     version='0.1.0',
     author='Kyle Hickey',
     author_email='malloydelacroix@gmail.com',
-    description='A user friendly file download framework.',
+    description='A user friendly file download library.',
     long_description=open('README.md').read(),
     long_description_content_type="text/markdown",
     url='https://github.com/MalloyDelacroix/chunkydl',
