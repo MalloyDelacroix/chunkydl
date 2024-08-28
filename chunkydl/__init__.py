@@ -19,6 +19,15 @@ from .models.queue_downloader import QueueDownloader
 from .models.download_config import DownloadConfig
 from .models.data_models import DLGroup
 from .exceptions import RequestFailedException
+from .models.size import Size
 
 
-__all__ = ['download', 'download_list', 'QueueDownloader', 'DownloadConfig', 'RequestFailedException', 'DLGroup']
+__all__ = [
+    'download',
+    'download_list',
+    'QueueDownloader',
+    'DownloadConfig',
+    'RequestFailedException',
+    'DLGroup',
+    'Size'
+]
