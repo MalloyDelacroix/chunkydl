@@ -55,7 +55,7 @@ import chunkydl
 chunkydl.download(
     url='http://example.com/path/to/file.mp4', 
     output_path='C:/Users/User/Downloads',
-    size_threshold=1024 * 1024 * 50,  # 50MB
+    size_threshold='50mb',  # 50MB
     multipart_threads=6
 )
 ```
@@ -71,12 +71,12 @@ dl_list = [
     DLGroup(
         url='http://example.com/path/to/file_one.mp4', 
         output_path='C:/Users/User/Downloads/new_file_one.mp4',
-        config=DownloadConfig(size_threshold=1024 * 1024 * 200, multipart_threads=3)
+        config=DownloadConfig(size_threshold='200mb', multipart_threads=3)
     ),
     DLGroup(
         url='http://example.com/path/to/file_two.mp4',
         output_path='C:/Users/User/Downloads/new_file_two.mp4',
-        config=DownloadConfig(size_threshold=1024 * 1024 * 20, headers={'Referer': 'http://example.com/'})
+        config=DownloadConfig(size_threshold='20mb', headers={'Referer': 'http://example.com/'})
     ),
     DLGroup(
         url='http://example_site_two.com/path/to/file_three.mp4',
