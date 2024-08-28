@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "chunkydl"
+version = "0.1.0"
+description = "A user-friendly download library"
+authors = ["Kyle Hickey <malloydelacroix@gmail.com>"]
+license = "Apache-2.0"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.6"
+requests = "^2.32.3"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
