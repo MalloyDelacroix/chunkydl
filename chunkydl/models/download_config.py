@@ -1,5 +1,7 @@
 import logging
 
+from .size import Size
+
 
 logger = logging.getLogger(__name__)
 
@@ -58,10 +60,10 @@ class DownloadConfig:
         self.retries = kwargs.get('retries', 3)
         self.retry_status_codes = kwargs.get('retry_status_codes', RETRY_STATUS_CODES)
         self.backoff_factor = kwargs.get('backoff_factor', 1)
-        self.chunk_size = kwargs.get('chunk_size', 1024 * 1024)
+        self.chunk_size = Size(kwargs.get('chunk_size', '1mb'))
         self._additional_headers = kwargs.get('additional_headers', None)
         self._complete_headers = kwargs.get('headers', None)
-        self.size_threshold = kwargs.get('size_threshold', 1024 * 1024 * 100)
+        self.size_threshold = Size(kwargs.get('size_threshold', '100mb'))
         self.download_threads = kwargs.get('download_threads', 4)
         self.multipart_threads = kwargs.get('multipart_threads', 4)
         self.run_perpetual = kwargs.get('run_perpetual', False)
