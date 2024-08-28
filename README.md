@@ -4,11 +4,10 @@
 patterns for downloading files all with little setup or configuration required.
 
 Chunky DL supports multipart download out of the box.  Simply set your size threshold and any file over that size will 
-be downloaded multiple parts of that size simultaneously then joined together at the end of download.  No further work is
-on your end is required.
+be downloaded in multiple parts and joined together at the end of download.  No further work is on your end is required.
 
 Chunky DL also supports multithreaded download for downloading multiple files at a time.  Simply supply a list of urls, 
-and the number of downloads you wish to run simultaneously, and the output path and no further configuration is required.
+the number of downloads you wish to run simultaneously, and the output path and no further configuration is required.
 
 ![Build Status](https://img.shields.io/badge/build-passing-brightgreen)
 ![GitHub License](https://img.shields.io/github/license/MalloyDelacroix/chunkydl?color=FFC000)
